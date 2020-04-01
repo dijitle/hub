@@ -1,0 +1,11 @@
+.dockerignore
+Dockerfile
+.env
+.git
+.gitignore
+.vs
+.vscode
+**/bin
+**/obj
+**/.toolstarget
+kubernetes
