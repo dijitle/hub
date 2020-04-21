@@ -1,11 +1,11 @@
-# Dijitle Chat
+# Dijitle hub
 
-[![Build Status](https://drone.dijitle.dev/api/badges/dijitle/chat/status.svg)](https://drone.dijitle.dev/dijitle/chat)
-[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/dijitle/chat?label=release)](https://github.com/dijitle/chat/releases)
-[![Docker Pulls](https://img.shields.io/docker/pulls/dijitle/chat)](https://hub.docker.com/r/dijitle/chat)
+[![Build Status](https://drone.dijitle.dev/api/badges/dijitle/hub/status.svg)](https://drone.dijitle.dev/dijitle/hub)
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/dijitle/hub?label=release)](https://github.com/dijitle/hub/releases)
+[![Docker Pulls](https://img.shields.io/docker/pulls/dijitle/hub)](https://hub.docker.com/r/dijitle/hub)
 
-SignalR-endabled API to handle chat and messaging with redis backend
+SignalR-endabled API to handle hub and messaging with redis backend
 
 ## endpoints
 
-[![api](https://img.shields.io/badge/API-Link-blue?style=flat)](https://chat.dijitle.com/api)
+[![api](https://img.shields.io/badge/API-Link-blue?style=flat)](https://hub.dijitle.com/api)

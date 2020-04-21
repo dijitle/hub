@@ -11,7 +11,7 @@ steps:
       - name: dockersock
         path: /var/run/
     commands:
-      - docker build --tag dijitle/chat:$DRONE_COMMIT .
+      - docker build --tag dijitle/hub:$DRONE_COMMIT .
   - name: push
     image: docker:dind
     privileged: true
@@ -24,9 +24,9 @@ steps:
       - name: dockersock
         path: /var/run/
     commands:
-      - docker tag dijitle/chat:$DRONE_COMMIT dijitle/chat:$DRONE_TAG
+      - docker tag dijitle/hub:$DRONE_COMMIT dijitle/hub:$DRONE_TAG
       - docker login -u $USERNAME -p $PASSWORD
-      - docker push dijitle/chat:$DRONE_TAG
+      - docker push dijitle/hub:$DRONE_TAG
     when:
       event:
         - tag
@@ -39,7 +39,7 @@ steps:
         from_secret: k8s_token
     commands:
       - kubectl-init.sh
-      - kubectl set image deployment/chat-deployment chat=dijitle/chat:$DRONE_TAG
+      - kubectl set image deployment/hub-deployment hub=dijitle/hub:$DRONE_TAG
     when:
       event:
         - tag

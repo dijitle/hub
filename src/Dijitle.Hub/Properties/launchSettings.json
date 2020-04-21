@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Dijitle.Chat": {
+    "Dijitle.hub": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api",

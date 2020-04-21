@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Dijitle.hub.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,7 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Prometheus;
 
-namespace Dijitle.Chat
+namespace Dijitle.hub
 {
   public class Startup
   {
@@ -29,18 +30,6 @@ namespace Dijitle.Chat
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddControllers();
-      services.AddMvcCore().AddApiExplorer();
-
-      services.AddSwaggerGen(c =>
-      {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dijitle Chat API", Version = "v1" });
-        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-        c.IncludeXmlComments(xmlPath);
-
-      });
-
       services.AddHealthChecks();
       services.AddCors(c =>
       {
@@ -48,9 +37,11 @@ namespace Dijitle.Chat
         {
           b.WithOrigins(Configuration.GetSection("CORsURLs").Get<string[]>())
            .AllowAnyHeader()
-           .AllowAnyMethod();
+           .AllowAnyMethod().AllowCredentials();
         });
       });
+
+      services.AddSignalR();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,26 +51,14 @@ namespace Dijitle.Chat
       {
         app.UseDeveloperExceptionPage();
       }
-      app.UseCors("AllowOrigin");
 
       app.UseRouting();
-      app.UseStaticFiles();
+      app.UseCors("AllowOrigin");
       app.UseHttpMetrics();
-      app.UseSwagger();
-      app.UseSwaggerUI(c =>
-      {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dijitle Chat API V1");
-        c.RoutePrefix = "api";
-        c.EnableDeepLinking();
-        c.EnableFilter();
-        c.InjectJavascript("https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js");
-        c.InjectJavascript("/js/swagger.js");
-        c.InjectStylesheet("/css/swagger.css");
-      });
-
+      
       app.UseEndpoints(e => {
-        e.MapControllers();
         e.MapMetrics();
+        e.MapHub<hubHub>("/hub");
       });
 
       app.UseHealthChecks("/health");
