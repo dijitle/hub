@@ -1,22 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Dijitle.hub.Hubs;
+using Dijitle.Hub.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using Prometheus;
 
-namespace Dijitle.hub
+namespace Dijitle.Hub
 {
   public class Startup
   {
@@ -58,7 +48,7 @@ namespace Dijitle.hub
       
       app.UseEndpoints(e => {
         e.MapMetrics();
-        e.MapHub<hubHub>("/hub");
+        e.MapHub<CentralHub>("/hub");
       });
 
       app.UseHealthChecks("/health");
