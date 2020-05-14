@@ -10,28 +10,28 @@ namespace Dijitle.Hub.Models
     {
       PreviousId = previousMessageId;
       Name = name;
-      MessageContent = message;
-      MessageSent = DateTime.Now;
+      Content = message;
+      DateSent = DateTime.Now;
 
       using(var hash = SHA512.Create())
       {
-        var bytes = Encoding.UTF8.GetBytes($"{PreviousId}{Name}{MessageContent}{MessageSent.Ticks}");
+        var bytes = Encoding.UTF8.GetBytes($"{PreviousId}{Name}{Content}{DateSent.Ticks}");
 
         Id = string.Concat(Array.ConvertAll(hash.ComputeHash(bytes), x => x.ToString("X2")));
       }
     }
 
-    public string Id { get; set; }
-    public string PreviousId { get; set; }
-    public string Name { get; set; }
-    public string MessageContent { get; set; }
-    public DateTime MessageSent { get; set; }
+    public string Id { get; }
+    public string PreviousId { get; }
+    public string Name { get; }
+    public string Content { get; private set; }
+    public DateTime DateSent { get; }
 
     public bool IsValid()
     {
       using (var hash = SHA512.Create())
       {
-        var bytes = Encoding.UTF8.GetBytes($"{PreviousId}{Name}{MessageContent}{MessageSent.Ticks}");
+        var bytes = Encoding.UTF8.GetBytes($"{PreviousId}{Name}{Content}{DateSent.Ticks}");
 
         return Id == string.Concat(Array.ConvertAll(hash.ComputeHash(bytes), x => x.ToString("X2")));
       }

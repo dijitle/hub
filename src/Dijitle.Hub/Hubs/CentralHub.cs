@@ -12,24 +12,41 @@ namespace Dijitle.Hub.Hubs
   [Authorize]
   public class CentralHub : Hub<IHub>
   {
-    private Messages _messages = new Messages();
+    private Messages _messages;
+
+    public CentralHub(Messages messages)
+    {
+      _messages = messages;
+    }
 
     public async Task SendMessage(string message)
     {
-      await Clients.All.MessageReceived(Context.User.Claims.FirstOrDefault(c => c.Type == "https://dijitle.com/userName").Value, message);
+      var m = _messages.AddMessage(UserName, message);
+      await Clients.All.MessageReceived(m);
     }
-
-    public override Task OnConnectedAsync()
+    
+    public async Task GetMessages(int amount, string earliestMessageId)
     {
-
-      Clients.All.MessageReceived("system", $"user {Context.User.Claims.FirstOrDefault(c => c.Type == "https://dijitle.com/userName").Value} has connected.");
-      return base.OnConnectedAsync();
+      await Clients.Caller.GetMessages(_messages.GetMessagesBefore(amount, earliestMessageId));
     }
 
-    public override Task OnDisconnectedAsync(Exception exception)
+    
+    public override async Task OnConnectedAsync()
     {
-      return base.OnDisconnectedAsync(exception);
+      var m = _messages.AddMessage("system", $"user {UserName} has connected.");      
+      await Clients.All.MessageReceived(m);
+      await base.OnConnectedAsync();
     }
+
+    public override async Task OnDisconnectedAsync(Exception exception)
+    {
+      var m = _messages.AddMessage("system", $"user {UserName} has disconnected.");
+      await Clients.All.MessageReceived(m);
+      await base.OnDisconnectedAsync(exception);
+    }
+
+
+    private string UserName { get { return Context.User.Claims.FirstOrDefault(c => c.Type == "https://dijitle.com/userName").Value; } }
   }
 }
  

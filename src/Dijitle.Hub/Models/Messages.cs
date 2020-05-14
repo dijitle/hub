@@ -7,14 +7,17 @@ namespace Dijitle.Hub.Models
 {
   public class Messages : LinkedList<Message>
   {
-    public void AddMessage(string name, string message)
+
+    public Message AddMessage(string name, string message)
     {
-      AddLast(new Message(Last?.Value.Id, name, message));
+      var m = new Message(Last?.Value.Id, name, message);
+      AddLast(m);
+      return m;
     }
 
-    public IEnumerable<Message> GetLastMessages(int amount = 25, int page = 1)
+    public IEnumerable<Message> GetMessagesBefore(int amount, string id)
     {
-      return this.SkipLast((page - 1) * amount).TakeLast(amount);
+      return this.Reverse().SkipWhile(m => m.Id != id).Skip(1).Take(amount).Reverse();
     }
 
     public bool IsValid()

@@ -1,4 +1,5 @@
 using Dijitle.Hub.Hubs;
+using Dijitle.Hub.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -63,12 +64,13 @@ namespace Dijitle.Hub
             {              
               // Read the token out of the query string
               context.Token = accessToken;
-              Console.WriteLine(accessToken);
             }
             return Task.CompletedTask;
           }
         };
       });
+
+      services.AddSingleton(_ => new Messages());
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
